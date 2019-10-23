@@ -2,6 +2,7 @@
 <p>Worldpay Online Payments Magento Module - Version 2.2.0</p>
 <p><strong>Tested versions..</strong></p>
 <p>Magento 2.2.2 - 2.3.2</p>
+<p>PHP 7.1.3 & PHP 7.2</p>
 <p><br /><strong>Installation</strong></p>
 <p>Take clone from https://github.com/zyxware-magento/worldpay-payment-gateway-magento2.2x-2.3.x.git</p>
 <p><strong>Run below scripts to install the extension</strong></p>
