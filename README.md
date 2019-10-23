@@ -5,6 +5,7 @@
 <p><br /><strong>Installation</strong></p>
 <p>Take clone from https://github.com/zyxware-magento/worldpay-payment-gateway-magento2.2x-2.3.x.git</p>
 <p><strong>Run below scripts to install the extension</strong></p>
+<p>Create Directory Zyxware Under MagentoRootFolder/app/code/ </p>
 <p>php bin/magento setup:upgrade<br />php bin/magento cache:clean</p>
 <p><strong>How To use</strong></p>
 <p>Login to your Magento Admin Panel. Go to Stores -&gt; Configuration-&gt; Sales -&gt; Worldpay</p>
