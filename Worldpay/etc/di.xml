@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Zyxware\Worldpay\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Zyxware\Worldpay\Logger\WorldpayLogger">
+        <arguments>
+            <argument name="name" xsi:type="string">WorldPay</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Zyxware\Worldpay\Logger\WorldpayHandler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
+        <plugin name="WorldpayPaymentMessagesGuestPaymentInformationManagement" type="Zyxware\Worldpay\Plugin\GuestPaymentInformationManagement" />
+    </type>
+    <type name="Magento\Checkout\Model\PaymentInformationManagement">
+        <plugin name="WorldpayPaymentMessagesPaymentInformationManagement" type="Zyxware\Worldpay\Plugin\PaymentInformationManagement" />
+    </type>
+    <type name="Zyxware\Worldpay\Model\MethodList">
+        <arguments>
+            <argument name="methodCodes" xsi:type="array">
+                <item name="worldpay_cc" xsi:type="string">worldpay_cc</item>
+                <item name="worldpay_apm" xsi:type="string">worldpay_apm</item>
+                <item name="worldpay_moto" xsi:type="string">worldpay_moto</item>
+                <item name="worldpay_cc_vault" xsi:type="string">worldpay_cc_vault</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Zyxware\Worldpay\Api\HistoryInterface" type="Zyxware\Worldpay\Model\Notification\History" />
+    <preference for="Zyxware\Worldpay\Api\PaymentTypeInterface" type="Zyxware\Worldpay\Model\Payment\PaymentTypes" />
+    <preference for="Magento\Vault\Model\Method\Vault" type="Zyxware\Worldpay\Model\PaymentMethods\CcVault" />
+    <type name="Zyxware\Worldpay\Model\PaymentMethods\CcVault">
+        <arguments>
+            <argument name="logger" xsi:type="object">Zyxware\Worldpay\Logger\WorldpayLogger</argument>
+            <argument name="directservice" xsi:type="object">Zyxware\Worldpay\Model\Authorisation\DirectService</argument>
+            <argument name="quoteRepository" xsi:type="object">Magento\Quote\Api\CartRepositoryInterface</argument>
+            <argument name="worldpayhelper" xsi:type="object">Zyxware\Worldpay\Helper\Data</argument>
+            <argument name="worldpaypayment" xsi:type="object">Zyxware\Worldpay\Model\WorldpaymentFactory</argument>
+            <argument name="worldpaypaymentmodel" xsi:type="object">Zyxware\Worldpay\Model\Worldpayment</argument>
+            <argument name="paymentutils" xsi:type="object">Zyxware\Worldpay\Model\Utilities\PaymentMethods</argument>
+            <argument name="paymentservicerequest" xsi:type="object">Zyxware\Worldpay\Model\Request\PaymentServiceRequest</argument>
+            <argument name="adminhtmlresponse" xsi:type="object">Zyxware\Worldpay\Model\Response\AdminhtmlResponse</argument>
+            <argument name="registry" xsi:type="object">Magento\Framework\Registry</argument>
+        </arguments>
+    </type>
+    <!-- Payment Method configuration -->
+    <virtualType name="WorldpayVaultPaymentConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Zyxware\Worldpay\Model\WorldpayConfigProvider::CC_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WorldpayVaultPaymentValueHandler" type="VaultPaymentDefaultValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">WorldpayVaultPaymentConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WorldpayVaultPaymentValueHandlerPool" type="VaultPaymentValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">WorldpayVaultPaymentValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="WorldpayCreditCardVaultFacade" type="Zyxware\Worldpay\Model\PaymentMethods\CcVault">
+        <arguments>
+            <argument name="config" xsi:type="object">WorldpayVaultPaymentConfig</argument>
+            <argument name="valueHandlerPool" xsi:type="object">WorldpayVaultPaymentValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">Zyxware\Worldpay\Model\PaymentMethods\CreditCards</argument>
+            <argument name="code" xsi:type="const">Zyxware\Worldpay\Model\WorldpayConfigProvider::CC_VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+</config>
